@@ -1,4 +1,10 @@
+seed: 42
+
 dataset: "cifar100" #cifar100, dog
 dataset_root: "dataset"
+dataset_path: "Dog/Images"
+num_workers: 2
+dataset_split: [0.7, 0.1, 0.2] # train, val, test
 
 batch_size: 32
+
