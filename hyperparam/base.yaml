@@ -1,0 +1,4 @@
+dataset: "cifar100" #cifar100, dog
+dataset_root: "dataset"
+
+batch_size: 32
