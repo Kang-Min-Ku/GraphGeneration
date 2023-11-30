@@ -1,15 +1,21 @@
 seed: 42
+batch_size: 32
+lr: 0.001
 
 dataset: "cifar100" #cifar100, dog
 dataset_root: "dataset"
 dataset_path: "Dog/Images"
 num_workers: 2
 dataset_split: [0.7, 0.1, 0.2] # train, val, test
+
 model: "resnet50" # model
 
-batch_size: 32
-
+embedding_path: "save"
 embedding_size: 128
+
+#######################################################################################
+# Generation config
+
 similarity_method: "cosine" # "euclidean"
 
 edge_threshold: 0.3
