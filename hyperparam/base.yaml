@@ -18,4 +18,6 @@ embedding_size: 128
 
 similarity_method: "cosine" # "euclidean"
 
-edge_threshold: 0.3
+edge_threshold: 0.6
+GPU_INDEX: 2
+sample_size: 1000

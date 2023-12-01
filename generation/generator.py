@@ -20,8 +20,7 @@ file_path = '../data/' + dataset + '_' + model + '_emb_' + str(embedding_size) +
 save_path = '../graph/' + dataset + '_' + model + '_emb_' + str(embedding_size) + '_' + similarity_method + '_' + str(edge_threshold) + '.gml'
 
 # Load Dataset
-# embeddings, labels = load_dataset(file_path)
-embeddings, labels = load_dataset('../data/small_dummy.pt')
+embeddings, labels = load_dataset(file_path)
 
 # Calculate Similarity
 if similarity_method == 'cosine':
@@ -30,4 +29,4 @@ elif similarity_method == 'euclidean':
     cal_similarity = cal_euclidean_similarity(embeddings)
 
 # Save Graph
-save_graph(cal_similarity, labels, edge_threshold, file_path)
+save_graph(cal_similarity, labels, edge_threshold, save_path)
