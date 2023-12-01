@@ -19,6 +19,8 @@ def extract_feature(model,
             embedding.append(outputs)
             label.append(labels)
 
+        print("Complete extracting train features")
+
         for images, labels in test_loader:
             images = images.to(device)
             labels = labels.to(device)
@@ -27,6 +29,8 @@ def extract_feature(model,
             outputs = model(images, is_extract=True)
             embedding.append(outputs)
             label.append(labels)
+
+        print("Complete extracting test features")
 
     embedding = torch.cat(embedding, dim=0)
     label = torch.cat(label, dim=0)
