@@ -86,7 +86,7 @@ class Loader:
             dataset_path = self.args.dataset_path
         assert dataset_path is not None, "dataset_path must be specified"
 
-        image_dirs = os.listdir(os.path.join(self.root, dataset_path, image_path))
+        image_dirs = sorted(os.listdir(os.path.join(self.root, dataset_path, image_path)))
         pattern = re.compile(r"-([a-zA-Z_-]+)$")
         dataset_class = [re.findall(pattern, d)[0] for d in image_dirs]
 
