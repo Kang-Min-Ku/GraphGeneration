@@ -1,3 +1,5 @@
 *.ipynb
 dataset
 __pycache__
+save
+graph
