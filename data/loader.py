@@ -11,13 +11,22 @@ import re
 import os
 
 class Loader:
-    def __init__(self, root:str, args:argparse.Namespace):
+    def __init__(self, root:str, args:argparse.Namespace, is_resize=False):
         self.root = root
+        if not os.path.exists(self.root):
+            os.makedirs(self.root, exist_ok=True)
         self.args = args
-        self.transform = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize((0.5, ), (0.5, ))
-        ])
+        if is_resize:
+            self.transform = transforms.Compose([
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize((0.5, ), (0.5, ))
+            ])
+        else:
+            self.transform = transforms.Compose([
+                transforms.ToTensor(),
+                transforms.Normalize((0.5, ), (0.5, ))
+            ])
         np.random.seed(self.args.seed)
 
     def load(self, dataset, dataset_path=None, num_deleted_class=0):
@@ -73,10 +82,12 @@ class Loader:
         20580 images
         Assume the situation that "images.tar" file provided by the Standford Dogs has been decomposed
         """
+        if dataset_path is None:
+            dataset_path = self.args.dataset_path
         assert dataset_path is not None, "dataset_path must be specified"
 
         image_dirs = os.listdir(os.path.join(self.root, dataset_path, image_path))
-        pattern = re.compile(r"-([a-zA-Z_]+)$")
+        pattern = re.compile(r"-([a-zA-Z_-]+)$")
         dataset_class = [re.findall(pattern, d)[0] for d in image_dirs]
 
         dataset = CustomImageFolder(os.path.join(self.root, dataset_path, image_path),
