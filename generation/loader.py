@@ -1,6 +1,8 @@
 import torch
 import networkx as nx
 import random
+import json
+import numpy as np
 
 def load_dataset(file_path):
     # .pt file loader
@@ -24,30 +26,64 @@ def load_sample_dataset(file_path, sample_size):
     return sampled_embeddings, sampled_labels
     
 
-def save_graph(similarity_matrix, labels, edge_threshold, file_path):
+def save_graph(node_embeddings, similarity_matrix, labels, edge_threshold, file_path):
     # Save graph
-    # Input: Similarity Tensor, Label Tensor, Edge Threshold, File Path
+    # Input: Node Embedding Tensor, Similarity Tensor, Label Tensor, Edge Threshold, File Path
     # Output: None
     
     G = nx.Graph()
-
-    for idx, embedding in enumerate(similarity_matrix):
-        embedding_list = embedding.tolist()
+    
+    labels = labels.cpu().numpy() if isinstance(labels, torch.Tensor) else labels  # Convert labels to NumPy if it's a PyTorch tensor
+    
+    for idx, node_embedding in enumerate(node_embeddings):
+        embedding_list = node_embedding.tolist()
         G.add_node(idx, embedding=embedding_list, label=labels[idx].item())
 
-    num_nodes = similarity_matrix.shape[0]
-    for i in range(num_nodes):
-        for j in range(i+1, num_nodes):
-            similarity_value = similarity_matrix[i][j].item()
-            
-            if similarity_matrix[i][j] > edge_threshold:
-                G.add_edge(i, j, weight=similarity_value)
-    
-    print(G.nodes[0]['label'])
-    print(G.number_of_edges())
+    edges = threshold_filter(similarity_matrix, edge_threshold)
+    for edge in edges:
+        G.add_edge(edge[0], edge[1], weight=similarity_matrix[edge[0]][edge[1]].item())
+        
     print(G.number_of_nodes())
+    print(G.number_of_edges())
     
-    nx.write_gml(G, file_path)
+    # JSON 형식으로 저장
+    graph_data = nx.node_link_data(G)
+    with open(file_path, 'w') as file:
+        json.dump(graph_data, file, cls=CustomJSONEncoder)
+        
+        
+class CustomJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.int64):
+            return int(obj)
+        return json.JSONEncoder.default(self, obj)
+        
+def threshold_filter(similarity_matrix, edge_threshold):
+    # Ensure the input is converted to a PyTorch tensor
+    if not isinstance(similarity_matrix, torch.Tensor):
+        similarity_tensor = torch.from_numpy(similarity_matrix).cuda("cuda:1")  # Convert from NumPy array to tensor
+    else:
+        similarity_tensor = similarity_matrix.cuda("cuda:1")  # Already a tensor, move to GPU
+
+    # Calculate edges based on the threshold
+    edges = torch.nonzero(similarity_tensor > edge_threshold, as_tuple=False)
+    
+    return edges.cpu().numpy()  # Move back to CPU for NetworkX compatibility
+
+    
+def load_graph(file_path):
+    # Load graph
+    # Input: File Path
+    # Output: NetworkX Graph
+    
+    # with open(file_path, 'r') as f:
+    #     for i, l in enumerate(f):
+    #         print(l)
+    #         if i > 10:
+    #             break
+    
+    G = nx.readwrite.json_graph.node_link_graph(json.load(open(file_path)))
+    return G
 
 def make_dummy_dataset():
     # Make dummy dataset

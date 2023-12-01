@@ -1,11 +1,14 @@
-from loader import load_dataset, load_sample_dataset, save_graph
+from loader import load_dataset, load_sample_dataset, save_graph, load_graph
 from cal_similarity import cal_cosine_similarity, cal_euclidean_similarity
+from visualization import visualization
 import torch
 
 import sys, os
 utils_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'utils')
 sys.path.append(utils_path)
 from parser import YamlParser
+
+import networkx as nx
 
 Yamlparser = YamlParser('../hyperparam/base.yaml')
 config = Yamlparser.args
@@ -18,17 +21,20 @@ edge_threshold = config.edge_threshold
 sample_size = config.sample_size
 
 file_path = '../save/' + dataset + '_' + model + '_emb_' + str(embedding_size) + '.pt'
-save_path = '../graph/' + dataset + '_' + model + '_emb_' + str(embedding_size) + '_' + similarity_method + '_' + str(edge_threshold) + '.gml'
+save_path = '../graph/' + dataset + '_' + model + '_emb_' + str(embedding_size) + '_' + similarity_method + '_' + str(edge_threshold) + '.json'
 
-# Load Dataset
-# embeddings, labels = load_dataset(file_path)
-embeddings, labels = load_sample_dataset(file_path, sample_size)
+
+# # Load Dataset
+# # embeddings, labels = load_dataset(file_path)
+node_embeddings, labels = load_sample_dataset(file_path, sample_size)
 
 # Calculate Similarity
 if similarity_method == 'cosine':
-    cal_similarity = cal_cosine_similarity(embeddings)
+    cal_similarity = cal_cosine_similarity(node_embeddings)
 elif similarity_method == 'euclidean':
-    cal_similarity = cal_euclidean_similarity(embeddings)
+    cal_similarity = cal_euclidean_similarity(node_embeddings)
 
 # Save Graph
-save_graph(cal_similarity, labels, edge_threshold, save_path)
+save_graph(node_embeddings, cal_similarity, labels, edge_threshold, save_path)
+# G = load_graph(save_path)
+# visualization(G)
