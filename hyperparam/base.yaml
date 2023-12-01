@@ -8,7 +8,7 @@ dataset_path: "Dog/Images"
 num_workers: 2
 dataset_split: [0.7, 0.1, 0.2] # train, val, test
 
-model: "resnet50" # model
+model: "resnet" # model
 
 embedding_path: "save"
 embedding_size: 128
@@ -20,4 +20,4 @@ similarity_method: "cosine" # "euclidean"
 
 edge_threshold: 0.6
 GPU_INDEX: 2
-sample_size: 1000
+sample_size: 2000

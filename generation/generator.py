@@ -1,4 +1,4 @@
-from loader import load_dataset, save_graph
+from loader import load_dataset, load_sample_dataset, save_graph
 from cal_similarity import cal_cosine_similarity, cal_euclidean_similarity
 import torch
 
@@ -8,19 +8,21 @@ sys.path.append(utils_path)
 from parser import YamlParser
 
 Yamlparser = YamlParser('../hyperparam/base.yaml')
-config = Yamlparser.args.config
+config = Yamlparser.args
 
-dataset = config['dataset']
-embedding_size = config['embedding_size']
-similarity_method = config['similarity_method']
-model = config['model']
-edge_threshold = config['edge_threshold']
+dataset = config.dataset
+embedding_size = config.embedding_size
+similarity_method = config.similarity_method
+model = config.model
+edge_threshold = config.edge_threshold
+sample_size = config.sample_size
 
-file_path = '../data/' + dataset + '_' + model + '_emb_' + str(embedding_size) + '.pt'
+file_path = '../save/' + dataset + '_' + model + '_emb_' + str(embedding_size) + '.pt'
 save_path = '../graph/' + dataset + '_' + model + '_emb_' + str(embedding_size) + '_' + similarity_method + '_' + str(edge_threshold) + '.gml'
 
 # Load Dataset
-embeddings, labels = load_dataset(file_path)
+# embeddings, labels = load_dataset(file_path)
+embeddings, labels = load_sample_dataset(file_path, sample_size)
 
 # Calculate Similarity
 if similarity_method == 'cosine':
