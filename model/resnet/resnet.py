@@ -1,18 +1,18 @@
 import torch
-from ..pretrained import load_pretrained
+import torch.nn as nn
+import timm
 
-class ResNet(torch.nn.Module):
-    def __init__(self, dataset, embedding_dim, is_freeze=True):
+class ResNetCifar100(nn.Module):
+    def __init__(self,
+                 embedding_dim,
+                 is_freeze):
         super().__init__()
 
-        assert dataset in ["cifar100", "dog"], "dataset must be either cifar100 or dog"
-
-        self.dataset = dataset
         self.embedding_dim = embedding_dim
-        self.pretrained = load_pretrained(dataset, "resnet")
+        self.pretrained = timm.create_model("resnet50_cifar100", pretrained=True) #huggingface/timm
+
         num_classes, hidden_dim = self.pretrained.fc.weight.shape
         self.pretrained.fc = torch.nn.Linear(hidden_dim, self.embedding_dim)
-
         if is_freeze:
             for name, param in self.pretrained.named_parameters():
                 if not name.startswith("fc"):
