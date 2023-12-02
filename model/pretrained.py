@@ -2,8 +2,9 @@ import timm
 import detectors
 import torch
 import torch.nn as nn
+from transformers import AutoImageProcessor, AutoModelForImageClassification
 from .resnet.resnet import ResNetCifar100
-from .vit.vit import VitCifar100
+from .vit.vit import VitCifar100, VitDog
 
 def load(dataset,
         model,
@@ -36,7 +37,13 @@ def load(dataset,
             pretrained = VitCifar100(embedding_dim=embedding_dim,
                                      is_freeze=is_freeze)
     elif dataset == "dog":
-        pass
+        if model == "resnet":
+            pass
+        elif model == "vit":
+            processor = AutoImageProcessor.from_pretrained("ep44/Stanford_dogs-google_vit_base_patch16_224")
+            base = AutoModelForImageClassification.from_pretrained("ep44/Stanford_dogs-google_vit_base_patch16_224")
+            pretrained = VitDog(embedding_dim=embedding_dim,
+                                is_freeze=is_freeze)
 
     if is_precheck and test_loader is not None:
         base = base.to(device)
@@ -49,7 +56,10 @@ def load(dataset,
                 images = images.to(device)
                 labels = labels.to(device)
                 outputs = base(images)
-                _, predicted = torch.max(outputs.data, 1)
+                try:
+                    _, predicted = torch.max(outputs.data, 1)
+                except:
+                    _, predicted = torch.max(outputs.logits, 1)
                 total += labels.size(0)
                 correct += (predicted == labels).sum()
         print("Accuracy of the network on the 10000 test images: %d %%" % (100 * correct / total))
