@@ -2,13 +2,14 @@ seed: 42
 batch_size: 32
 lr: 0.001
 
-dataset: "cifar100" # "cifar100", "dog"
+dataset: "dog" #cifar100, dog
 dataset_root: "dataset"
 dataset_path: "Dog"
 num_workers: 2
 dataset_split: [0.7, 0.1, 0.2] # train, val, test
 
-model: "vit" # model "resnet", "vit"
+model: "resnet" # model
+epochs: 1000
 
 embedding_path: "save"
 embedding_size: 128
