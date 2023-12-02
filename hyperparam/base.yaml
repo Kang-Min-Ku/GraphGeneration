@@ -2,13 +2,13 @@ seed: 42
 batch_size: 32
 lr: 0.001
 
-dataset: "cifar100" #cifar100, dog
+dataset: "cifar100" # "cifar100", "dog"
 dataset_root: "dataset"
 dataset_path: "Dog"
 num_workers: 2
 dataset_split: [0.7, 0.1, 0.2] # train, val, test
 
-model: "resnet" # model
+model: "vit" # model "resnet", "vit"
 
 embedding_path: "save"
 embedding_size: 128
@@ -16,8 +16,8 @@ embedding_size: 128
 #######################################################################################
 # Generation config
 
-similarity_method: "cosine" # "euclidean"
+similarity_method: "euclidean" # "cosine" # "euclidean"
 
-edge_threshold: 0.6
+edge_threshold: 0.90
 GPU_INDEX: 2
-sample_size: 1000
+sample_size: 10000

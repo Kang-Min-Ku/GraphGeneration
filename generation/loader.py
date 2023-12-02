@@ -46,6 +46,9 @@ def save_graph(node_embeddings, similarity_matrix, labels, edge_threshold, file_
     print(G.number_of_nodes())
     print(G.number_of_edges())
     
+    if (G.number_of_nodes() > 500000):
+        exit(1)
+    
     # JSON 형식으로 저장
     graph_data = nx.node_link_data(G)
     with open(file_path, 'w') as file:
