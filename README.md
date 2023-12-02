@@ -1,3 +1,5 @@
+This repository is for image graph generation task that is team project of Graph Machine Learning class in Sungkyunkwan University by prof. Hogun Park
+
 # GraphGeneration
 
 # Directory description
