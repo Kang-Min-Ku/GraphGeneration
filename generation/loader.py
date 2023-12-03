@@ -24,7 +24,7 @@ def load_sample_dataset(file_path, sample_size):
     sampled_labels = torch.tensor([labels[i] for i in indices], dtype=torch.int32)  # 라벨 텐서 생성
     
     return sampled_embeddings, sampled_labels
-    
+
 
 def save_graph(node_embeddings, similarity_matrix, labels, edge_threshold, file_path):
     # Save graph
@@ -53,7 +53,7 @@ def save_graph(node_embeddings, similarity_matrix, labels, edge_threshold, file_
     graph_data = nx.node_link_data(G)
     with open(file_path, 'w') as file:
         json.dump(graph_data, file, cls=CustomJSONEncoder)
-        
+    
         
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):

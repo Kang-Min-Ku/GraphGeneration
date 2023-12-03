@@ -19,14 +19,14 @@ similarity_method = config.similarity_method
 model = config.model
 edge_threshold = config.edge_threshold
 sample_size = config.sample_size
+batch_size = config.batch_size
 
 file_path = '../save/' + dataset + '_' + model + '_emb_' + str(embedding_size) + '.pt'
-save_path = '../graph/' + dataset + '_' + model + '_emb_' + str(embedding_size) + '_' + similarity_method + '_' + str(edge_threshold) + '.json'
+save_path = '../graph/' + dataset + '_' + model + '_emb_' + str(embedding_size) + '_' + similarity_method + '_' + str(edge_threshold) + '_' + str(sample_size) + '.json'
 
-
-# # Load Dataset
-# # embeddings, labels = load_dataset(file_path)
-node_embeddings, labels = load_sample_dataset(file_path, sample_size)
+# Load Dataset
+node_embeddings, labels = load_dataset(file_path)
+# node_embeddings, labels = load_sample_dataset(file_path, sample_size)
 
 # Calculate Similarity
 if similarity_method == 'cosine':
