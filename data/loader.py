@@ -29,7 +29,7 @@ class Loader:
             ])
         np.random.seed(self.args.seed)
 
-    def load(self, dataset, dataset_path=None, num_deleted_class=0):
+    def load(self, dataset, dataset_path=None, num_deleted_class=0, verbose=False):
         """
         dataset should be "cifar100" or "dog"
         dataset_path should be specifed if dataset is "dog"
@@ -37,11 +37,11 @@ class Loader:
         assert dataset in ["cifar100", "dog"], "dataset must be cifar100 or dog"
 
         if dataset == "cifar100":
-            return self._load_cifar100(dataset_path, num_deleted_class)
+            return self._load_cifar100(dataset_path, num_deleted_class, verbose)
         elif dataset == "dog":
-            return self._load_dog(dataset_path, num_deleted_class)
+            return self._load_dog(dataset_path, num_deleted_class, verbose)
         
-    def _load_cifar100(self, dataset_path, num_deleted_class):
+    def _load_cifar100(self, dataset_path, num_deleted_class, verbose):
         """
         50000 training samples and 10000 test samples
         500 samples for each class
@@ -55,6 +55,9 @@ class Loader:
                                                 download=True,
                                                 transform=self.transform)
         
+        if verbose:
+                print(trainset.classes)
+
         if num_deleted_class > 0:
             dataset_class = trainset.classes
             num_class = len(dataset_class)
@@ -63,7 +66,6 @@ class Loader:
             assert num_remain_class > 0, "num_remain_class must be positive"
 
             remain_class = np.random.choice(dataset_class, num_remain_class, replace=False)
-            
             train_class_indices = [trainset.class_to_idx[cls] for cls in remain_class]
             train_filtered_indices = [i for i, (_, label) in enumerate(trainset) if label in train_class_indices]
             trainset = torch.utils.data.Subset(trainset, train_filtered_indices)
@@ -77,7 +79,7 @@ class Loader:
 
         return trainloader, testloader
     
-    def _load_dog(self, dataset_path, num_deleted_class, image_path="Images"):
+    def _load_dog(self, dataset_path, num_deleted_class, verbose, image_path="Images"):
         """
         20580 images
         Assume the situation that "images.tar" file provided by the Standford Dogs has been decomposed
@@ -89,6 +91,9 @@ class Loader:
         image_dirs = sorted(os.listdir(os.path.join(self.root, dataset_path, image_path)))
         pattern = re.compile(r"-([a-zA-Z_-]+)$")
         dataset_class = [re.findall(pattern, d)[0] for d in image_dirs]
+
+        if verbose:
+            print(dataset_class)
 
         dataset = CustomImageFolder(os.path.join(self.root, dataset_path, image_path),
                                     transform=self.transform,
