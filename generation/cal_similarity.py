@@ -24,10 +24,11 @@ def cal_euclidean_similarity(embeddings, epsilon=1e-9):
     embeddings = embeddings.to(device)
     normalized_embeddings = F.normalize(embeddings, p=2, dim=1)
     similarity_matrix = torch.cdist(normalized_embeddings, normalized_embeddings, p=2)
-    similarity_matrix = 1 / (similarity_matrix + epsilon)
     normalize_similarity_matrix = normalize_similarity(similarity_matrix)
+    # 모든 값들을 1에서 빼기
+    modified_similarity_matrix = 1 - normalize_similarity_matrix
     
-    return normalize_similarity_matrix.cpu()
+    return modified_similarity_matrix.cpu()
 
 def normalize_similarity(similarity_matrix):
     # Normalize similarity matrix

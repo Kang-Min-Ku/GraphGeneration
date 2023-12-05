@@ -2,7 +2,7 @@ seed: 42
 batch_size: 32
 lr: 0.001
 
-dataset: "cifar100" #cifar100, dog
+dataset: "dog" #cifar100, dog
 dataset_root: "dataset"
 dataset_path: "Dog"
 num_workers: 2
@@ -21,4 +21,4 @@ similarity_method: "cosine" # "cosine" # "euclidean"
 
 edge_threshold: 0.8
 GPU_INDEX: 2
-sample_size: 60000
+sample_size: 20580

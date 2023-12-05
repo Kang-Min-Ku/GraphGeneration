@@ -46,8 +46,8 @@ def save_graph(node_embeddings, similarity_matrix, labels, edge_threshold, file_
     print(G.number_of_nodes())
     print(G.number_of_edges())
     
-    if (G.number_of_nodes() > 500000):
-        exit(1)
+    # if (G.number_of_nodes() > 500000):
+    #     exit(1)
     
     # JSON 형식으로 저장
     graph_data = nx.node_link_data(G)
@@ -100,3 +100,22 @@ def make_dummy_dataset():
     torch.save((embeddings, labels), file_path)
     
 # make_dummy_dataset()
+
+def label_comparison(G):
+    # Input: NetworkX Graph
+    # Output: None
+    
+    same_label_count = 0
+    diff_label_count = 0
+
+    for edge in G.edges():
+        node1_label = G.nodes[edge[0]]['label']
+        node2_label = G.nodes[edge[1]]['label']
+        
+        if node1_label == node2_label:
+            same_label_count += 1
+        else:
+            diff_label_count += 1
+    
+    print("Same label count: ", same_label_count)
+    print("Diff label count: ", diff_label_count)

@@ -1,4 +1,4 @@
-from loader import load_dataset, load_sample_dataset, save_graph, load_graph
+from loader import load_dataset, load_sample_dataset, save_graph, load_graph, label_comparison
 from cal_similarity import cal_cosine_similarity, cal_euclidean_similarity
 from visualization import visualization
 import torch
@@ -25,8 +25,8 @@ file_path = '../save/' + dataset + '_' + model + '_emb_' + str(embedding_size) +
 save_path = '../graph/' + dataset + '_' + model + '_emb_' + str(embedding_size) + '_' + similarity_method + '_' + str(edge_threshold) + '_' + str(sample_size) + '.json'
 
 # Load Dataset
-node_embeddings, labels = load_dataset(file_path)
-# node_embeddings, labels = load_sample_dataset(file_path, sample_size)
+# node_embeddings, labels = load_dataset(file_path)
+node_embeddings, labels = load_sample_dataset(file_path, sample_size)
 
 # Calculate Similarity
 if similarity_method == 'cosine':
@@ -36,5 +36,15 @@ elif similarity_method == 'euclidean':
 
 # Save Graph
 save_graph(node_embeddings, cal_similarity, labels, edge_threshold, save_path)
-# G = load_graph(save_path)
+
+
+"""
+# Label comparison
+G = load_graph(save_path)
+print(G.number_of_nodes())
+print(G.number_of_edges())
+
+label_comparison(G)
+
 # visualization(G)
+"""
