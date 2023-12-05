@@ -15,7 +15,7 @@ def cal_cosine_similarity(embeddings):
     
     return normalize_similarity_matrix.cpu()
 
-def cal_euclidean_similarity(embeddings):
+def cal_euclidean_similarity(embeddings, epsilon=1e-9):
     # Calculate similarity (euclidean similarity)
     # Input: Embedding Tensor
     # Output: Similarity Tensor
@@ -24,6 +24,7 @@ def cal_euclidean_similarity(embeddings):
     embeddings = embeddings.to(device)
     normalized_embeddings = F.normalize(embeddings, p=2, dim=1)
     similarity_matrix = torch.cdist(normalized_embeddings, normalized_embeddings, p=2)
+    similarity_matrix = 1 / (similarity_matrix + epsilon)
     normalize_similarity_matrix = normalize_similarity(similarity_matrix)
     
     return normalize_similarity_matrix.cpu()
