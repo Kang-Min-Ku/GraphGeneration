@@ -1,1 +1,1 @@
-Our GNN model refers [NodeFormer](https://github.com/qitianwu/NodeFormer/tree/main)
+Our GNN model code refers [NodeFormer](https://github.com/qitianwu/NodeFormer/tree/main)
